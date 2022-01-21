@@ -1,0 +1,486 @@
+Q1. Query the average population for all cities in CITY, rounded down to the nearest integer.
+
+Input Format
+
+The CITY table is described as follows:CITY.jpg
+
+ 
+
+select round(avg(population))from city
+
+
+
+
+
+Q2. Query the sum of the populations for all Japanese cities in CITY. The COUNTRYCODE for Japan is JPN.
+
+Input Format
+
+The CITY table is described as follows:CITY.jpg
+
+ 
+jpn
+
+select  sum(population) from city where countrycode ='jpn'
+
+
+
+
+Q3.  Query the difference between the maximum and minimum populations in CITY.
+
+Input Format
+
+The CITY table is described as follows:CITY.jpg
+
+ 
+
+select max(population)-min(population) from city
+
+
+
+
+
+Q4.  Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table, but did not realize her keyboard's 0
+key was broken until after completing the calculation. She wants your help finding the difference between her miscalculation 
+(using salaries with any zeros removed), and the actual average salary.
+
+Write a query calculating the amount of error (i.e.:  average monthly salaries), and round it up to the next integer.
+
+Input Format
+
+The EMPLOYEES table is described as follows:
+
+
+
+Note: Salary is per month.
+
+Constraints
+
+.
+
+Sample Input
+
+
+
+Sample Output
+
+2061
+Explanation
+
+The table below shows the salaries without zeros as they were entered by Samantha:
+
+
+
+Samantha computes an average salary of . The actual average salary is .
+
+The resulting error between the two calculations is . Since it is equal to the integer , it does not get rounded up.
+
+ 
+
+SELECT CEIL(AVG(Salary)-AVG(REPLACE(Salary,'0',''))) FROM EMPLOYEES;
+
+
+
+
+Q5.  We define an employee's total earnings to be their monthly salary*months worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee table. Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. Then print these values as  space-separated integers.
+
+Input Format
+
+The Employee table containing employee data for a company is described as follows:
+
+
+
+where employee_id is an employee's ID number, name is their name, months is the total number of months they've been working for the company, and salary is the their monthly salary.
+
+Sample Input
+
+
+
+Sample Output
+
+69952 1
+Explanation
+
+The table and earnings data is depicted in the following diagram:
+
+The maximum earnings value is . The only employee with earnings  is Kimberly, so we print the maximum earnings value () and a count of the number of employees who have earned  (which is ) as two space-separated values.
+
+ 
+
+select (salary * months)as earnings ,count(*) from employee group by 1 order by earnings desc limit 1
+
+
+
+Q6.Query the following two values from the STATION table:
+
+The sum of all values in LAT_N rounded to a scale of  decimal places.
+The sum of all values in LONG_W rounded to a scale of  decimal places.
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+Output Format
+
+Your results must be in the form:
+
+lat lon
+where  is the sum of all values in LAT_N and  is the sum of all values in LONG_W. Both results must be rounded to a scale of  decimal places.
+
+ 
+
+select round(sum(LAT_N),2) as lat, round(sum(LONG_W),2) as lon
+from Station
+
+
+
+
+Q7.   Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than  and less than . Truncate your answer to  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+SELECT TRUNCATE(SUM(LAT_N), 4)
+    FROM STATION
+    WHERE LAT_N > 38.7880
+    AND LAT_N < 137.23245
+
+
+
+Q8.  Query the greatest value of the Northern Latitudes (LAT_N) from STATION that is less than . Truncate your answer to  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+
+SELECT TRUNCATE(MAX(lat_n),4)
+FROM station
+WHERE lat_n < 137.2345;
+
+
+
+
+Q9.  Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N) in STATION that is less than . Round your answer to  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+
+Select ROUND(LONG_W,4) from STATION WHERE LAT_N = (SELECT MAX(LAT_N) FROM STATION WHERE LAT_N<137.2345);
+
+
+Q10.   Query the Western Longitude (LONG_W)where the smallest Northern Latitude (LAT_N) in STATION is greater than . Round your answer to  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+select round(LONG_W,4) from STATION where LAT_N=(select min(LAT_N) from STATION where LAT_N>38.7780);
+
+
+
+
+Q11.  Consider  and  to be two points on a 2D plane.
+
+ happens to equal the minimum value in Northern Latitude (LAT_N in STATION).
+ happens to equal the minimum value in Western Longitude (LONG_W in STATION).
+ happens to equal the maximum value in Northern Latitude (LAT_N in STATION).
+ happens to equal the maximum value in Western Longitude (LONG_W in STATION).
+Query the Manhattan Distance between points  and  and round it to a scale of  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+
+select round(abs(min(lat_n)-max(lat_n))+abs(min(long_w)-max(long_w)),4) from station;
+
+
+
+Q12.   Consider  and  to be two points on a 2D plane where  are the respective minimum and maximum values of Northern Latitude (LAT_N) and  are the respective minimum and maximum values of Western Longitude (LONG_W) in STATION.
+
+Query the Euclidean Distance between points  and  and format your answer to display  decimal digits.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+
+SELECT
+    ROUND(SQRT(
+        POWER(MAX(LAT_N)  - MIN(LAT_N),  2)
+      + POWER(MAX(LONG_W) - MIN(LONG_W), 2)
+    ), 4)
+FROM 
+    STATION;
+
+
+
+
+Q13.    A median is defined as a number separating the higher half of a data set from the lower half. Query the median of the Northern Latitudes (LAT_N) from STATION and round your answer to  decimal places.
+
+Input Format
+
+The STATION table is described as follows:
+
+Station.jpg
+
+where LAT_N is the northern latitude and LONG_W is the western longitude.
+
+ 
+select round(s.lat_n,4) from station s where (select round(count(s.id)/2)-1 from station) = (select count(s1.id) from station s1 where s1.lat_n > s.lat_n);
+
+
+
+
+
+
+Q14.  Julia conducted a  days of learning SQL contest. The start date of the contest was March 01, 2016 and the end date was March 15, 2016.
+
+Write a query to print total number of unique hackers who made at least  submission each day (starting on the first day of the contest), and find the hacker_id and name of the hacker who made maximum number of submissions each day. If more than one such hacker has a maximum number of submissions, print the lowest hacker_id. The query should print this information for each day of the contest, sorted by the date.
+
+Input Format
+
+The following tables hold contest data:
+
+Hackers: The hacker_id is the id of the hacker, and name is the name of the hacker.
+
+Submissions: The submission_date is the date of the submission, submission_id is the id of the submission, hacker_id is the id of the hacker who made the submission, and score is the score of the submission.
+
+Sample Input
+
+For the following sample input, assume that the end date of the contest was March 06, 2016.
+
+Hackers Table:Submissions Table:
+
+Sample Output
+
+2016-03-01 4 20703 Angela
+2016-03-02 2 79722 Michael
+2016-03-03 2 20703 Angela
+2016-03-04 2 20703 Angela
+2016-03-05 1 36396 Frank
+2016-03-06 1 20703 Angela
+Explanation
+
+On March 01, 2016 hackers , , , and  made submissions. There are  unique hackers who made at least one submission each day. As each hacker made one submission,  is considered to be the hacker who made maximum number of submissions on this day. The name of the hacker is Angela.
+
+On March 02, 2016 hackers , , and  made submissions. Now  and  were the only ones to submit every day, so there are  unique hackers who made at least one submission each day.  made  submissions, and name of the hacker is Michael.
+
+On March 03, 2016 hackers , , and  made submissions. Now  and  were the only ones, so there are  unique hackers who made at least one submission each day. As each hacker made one submission so  is considered to be the hacker who made maximum number of submissions on this day. The name of the hacker is Angela.
+
+On March 04, 2016 hackers , , , and  made submissions. Now  and  only submitted each day, so there are  unique hackers who made at least one submission each day. As each hacker made one submission so  is considered to be the hacker who made maximum number of submissions on this day. The name of the hacker is Angela.
+
+On March 05, 2016 hackers , ,  and  made submissions. Now  only submitted each day, so there is only  unique hacker who made at least one submission each day.  made  submissions and name of the hacker is Frank.
+
+On March 06, 2016 only  made submission, so there is only  unique hacker who made at least one submission each day.  made  submission and name of the hacker is Angela.
+
+
+select 
+submission_date ,
+( SELECT COUNT(distinct hacker_id)  
+ FROM Submissions s2  
+ WHERE s2.submission_date = s1.submission_date AND    (SELECT COUNT(distinct s3.submission_date) FROM      Submissions s3 WHERE s3.hacker_id = s2.hacker_id AND s3.submission_date < s1.submission_date) = dateDIFF(s1.submission_date , '2016-03-01')) ,
+(select hacker_id  from submissions s2 where s2.submission_date = s1.submission_date 
+group by hacker_id order by count(submission_id) desc , hacker_id limit 1) as shit,
+(select name from hackers where hacker_id = shit)
+from 
+(select distinct submission_date from submissions) s1
+group by submission_date
+
+
+
+
+Q15. You are given two tables: Students and Grades. Students contains three columns ID, Name and Marks.
+
+
+
+Grades contains the following data:
+
+
+
+Ketty gives Eve a task to generate a report containing three columns: Name, Grade and Mark. Ketty doesn't want the NAMES of those students who received a grade lower than 8. The report must be in descending order by grade -- i.e. higher grades are entered first. If there is more than one student with the same grade (8-10) assigned to them, order those particular students by their name alphabetically. Finally, if the grade is lower than 8, use "NULL" as their name and list them by their grades in descending order. If there is more than one student with the same grade (1-7) assigned to them, order those particular students by their marks in ascending order.
+
+Write a query to help Eve.
+
+Sample Input
+
+
+
+Sample Output
+
+Maria 10 99
+Jane 9 81
+Julia 9 88 
+Scarlet 8 78
+NULL 7 63
+NULL 7 68
+
+Note
+
+Print "NULL"  as the name if the grade is less than 8.
+
+Explanation
+
+Consider the following table with the grades assigned to the students:
+
+
+
+So, the following students got 8, 9 or 10 grades:
+
+Maria (grade 10)
+Jane (grade 9)
+Julia (grade 9)
+Scarlet (grade 8)
+ 
+
+SELECT IF(GRADE < 8, NULL, NAME), GRADE, MARKS
+FROM STUDENTS JOIN GRADES
+WHERE MARKS BETWEEN MIN_MARK AND MAX_MARK
+ORDER BY GRADE DESC, NAME
+
+
+
+
+Q16.  Julia just finished conducting a coding contest, and she needs your help assembling the leaderboard! Write a query to print the respective hacker_id and name of hackers who achieved full scores for more than one challenge. Order your output in descending order by the total number of challenges in which the hacker earned a full score. If more than one hacker received full scores in same number of challenges, then sort them by ascending hacker_id.
+
+Input Format
+
+The following tables contain contest data:
+
+Hackers: The hacker_id is the id of the hacker, and name is the name of the hacker.
+
+Difficulty: The difficult_level is the level of difficulty of the challenge, and score is the score of the challenge for the difficulty level.
+
+Challenges: The challenge_id is the id of the challenge, the hacker_id is the id of the hacker who created the challenge, and difficulty_level is the level of difficulty of the challenge.
+
+Submissions: The submission_id is the id of the submission, hacker_id is the id of the hacker who made the submission, challenge_id is the id of the challenge that the submission belongs to, and score is the score of the submission.
+
+Sample Input
+
+Hackers Table:Difficulty Table:Challenges Table:Submissions Table:
+
+Sample Output
+
+90411 Joe
+Explanation
+
+Hacker 86870 got a score of 30 for challenge 71055 with a difficulty level of 2, so 86870 earned a full score for this challenge.
+
+Hacker 90411 got a score of 30 for challenge 71055 with a difficulty level of 2, so 90411 earned a full score for this challenge.
+
+Hacker 90411 got a score of 100 for challenge 66730 with a difficulty level of 6, so 90411 earned a full score for this challenge.
+
+Only hacker 90411 managed to earn a full score for more than one challenge, so we print the their hacker_id and name as  space-separated values.
+
+ 
+
+select h.hacker_id, h.name
+from submissions s
+inner join challenges c
+on s.challenge_id = c.challenge_id
+inner join difficulty d
+on c.difficulty_level = d.difficulty_level 
+inner join hackers h
+on s.hacker_id = h.hacker_id
+where s.score = d.score and c.difficulty_level = d.difficulty_level
+group by h.hacker_id, h.name
+having count(s.hacker_id) > 1
+order by count(s.hacker_id) desc, s.hacker_id asc
+
+
+
+
+Q17.  Harry Potter and his friends are at Ollivander's with Ron, finally replacing Charlie's old broken wand.
+
+Hermione decides the best way to choose is by determining the minimum number of gold galleons needed to buy each non-evil wand of high power and age. Write a query to print the id, age, coins_needed, and power of the wands that Ron's interested in, sorted in order of descending power. If more than one wand has same power, sort the result in order of descending age.
+
+Input Format
+
+The following tables contain data on the wands in Ollivander's inventory:
+
+Wands: The id is the id of the wand, code is the code of the wand, coins_needed is the total number of gold galleons needed to buy the wand, and power denotes the quality of the wand (the higher the power, the better the wand is).
+
+Wands_Property: The code is the code of the wand, age is the age of the wand, and is_evil denotes whether the wand is good for the dark arts. If the value of is_evil is 0, it means that the wand is not evil. The mapping between code and age is one-one, meaning that if there are two pairs,  and , then  and .
+
+Sample Input
+
+Wands Table:Wands_Property Table:
+
+Sample Output
+
+9 45 1647 10
+12 17 9897 10
+1 20 3688 8
+15 40 6018 7
+19 20 7651 6
+11 40 7587 5
+10 20 504 5
+18 40 3312 3
+20 17 5689 3
+5 45 6020 2
+14 40 5408 1
+Explanation
+
+The data for wands of age 45 (code 1):
+
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The data for wands of age 40 (code 2):
+
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The data for wands of age 20 (code 4):
+
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+The data for wands of age 17 (code 5):
+
+The minimum number of galleons needed for 
+The minimum number of galleons needed for 
+ 
+select w.id, p.age, w.coins_needed, w.power from Wands as w join Wands_Property as p on (w.code = p.code)
+where p.is_evil = 0 and w.coins_needed = (select min(coins_needed) from Wands as w1 join Wands_Property as p1 
+on (w1.code = p1.code) where w1.power = w.power and p1.age = p.age) order by w.power desc, p.age desc
+
+
+
+Q18.  
